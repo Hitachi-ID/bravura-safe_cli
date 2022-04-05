@@ -74,10 +74,7 @@ export class VaultProgram extends Program {
       .option("--url <url>", "Filter items of type login with a url-match search.")
       .option("--folderid <folderid>", "Filter items by folder id.")
       .option("--collectionid <collectionid>", "Filter items by collection id.")
-      .option(
-        "--organizationid <organizationid>",
-        "Filter items or collections by organization id."
-      )
+      .option("--organizationid <organizationid>", "Filter items or collections by team id.")
       .option("--trash", "Filter items that are deleted and in the trash.")
       .on("--help", () => {
         writeLn("\n  Notes:");
@@ -150,7 +147,7 @@ export class VaultProgram extends Program {
       })
       .option("--itemid <itemid>", "Attachment's item id.")
       .option("--output <output>", "Output directory or filename for attachment.")
-      .option("--organizationid <organizationid>", "Organization id for an organization object.")
+      .option("--organizationid <organizationid>", "Team id for a team object.")
       .on("--help", () => {
         writeLn("\n  If raw output is specified and no output filename or directory is given for");
         writeLn("  an attachment query, the attachment content is written to stdout.");
@@ -206,7 +203,7 @@ export class VaultProgram extends Program {
       })
       .option("--file <file>", "Path to file for attachment.")
       .option("--itemid <itemid>", "Attachment's item id.")
-      .option("--organizationid <organizationid>", "Organization id for an organization object.")
+      .option("--organizationid <organizationid>", "Team id for a team object.")
       .on("--help", () => {
         writeLn("\n  Examples:");
         writeLn("");
@@ -245,7 +242,7 @@ export class VaultProgram extends Program {
         id: "Object's globally unique `id`.",
         encodedJson: "Encoded json of the object to create. Can also be piped into stdin.",
       })
-      .option("--organizationid <organizationid>", "Organization id for an organization object.")
+      .option("--organizationid <organizationid>", "Team id for a team object.")
       .on("--help", () => {
         writeLn("\n  Examples:");
         writeLn("");
@@ -288,7 +285,7 @@ export class VaultProgram extends Program {
         id: "Object's globally unique `id`.",
       })
       .option("--itemid <itemid>", "Attachment's item id.")
-      .option("--organizationid <organizationid>", "Organization id for an organization object.")
+      .option("--organizationid <organizationid>", "Team id for a team object.")
       .option(
         "-p, --permanent",
         "Permanently deletes the item instead of soft-deleting it (item only)."
@@ -350,9 +347,9 @@ export class VaultProgram extends Program {
   private shareCommand(commandName: string, deprecated: boolean): program.Command {
     return new program.Command(commandName)
       .arguments("<id> <organizationId> [encodedJson]")
-      .description((deprecated ? "--DEPRECATED-- " : "") + "Move an item to an organization.", {
+      .description((deprecated ? "--DEPRECATED-- " : "") + "Move an item to a team.", {
         id: "Object's globally unique `id`.",
-        organizationId: "Organization's globally unique `id`.",
+        organizationId: "Team's globally unique `id`.",
         encodedJson: "Encoded json of an array of collection ids. Can also be piped into stdin.",
       })
       .on("--help", () => {
@@ -388,11 +385,11 @@ export class VaultProgram extends Program {
     const confirmObjects = ["org-member"];
     return new program.Command("confirm")
       .arguments("<object> <id>")
-      .description("Confirm an object to the organization.", {
+      .description("Confirm an object to the team.", {
         object: "Valid objects are: " + confirmObjects.join(", "),
         id: "Object's globally unique `id`.",
       })
-      .option("--organizationid <organizationid>", "Organization id for an organization object.")
+      .option("--organizationid <organizationid>", "Team id for a team object.")
       .on("--help", () => {
         writeLn("\n  Examples:");
         writeLn("");
@@ -422,7 +419,7 @@ export class VaultProgram extends Program {
         input: "Filepath to data to import",
       })
       .option("--formats", "List formats")
-      .option("--organizationid <organizationid>", "ID of the organization to import to.")
+      .option("--organizationid <organizationid>", "ID of the team to import to.")
       .on("--help", () => {
         writeLn("\n Examples:");
         writeLn("");
@@ -448,9 +445,9 @@ export class VaultProgram extends Program {
       .option("--format <format>", "Export file format.")
       .option(
         "--password [password]",
-        "Use password to encrypt instead of your Bitwarden account encryption key. Only applies to the encrypted_json format."
+        "Use password to encrypt instead of your Bravura Safe account encryption key. Only applies to the encrypted_json format."
       )
-      .option("--organizationid <organizationid>", "Organization id for an organization.")
+      .option("--organizationid <organizationid>", "Team id for a team.")
       .on("--help", () => {
         writeLn("\n  Notes:");
         writeLn("");

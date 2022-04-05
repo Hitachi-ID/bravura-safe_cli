@@ -38,7 +38,10 @@ export class Program extends BaseProgram {
       .option("--quiet", "Don't return anything to stdout.")
       .option("--nointeraction", "Do not prompt for interactive user input.")
       .option("--session <session>", "Pass session key instead of reading from env.")
-      .version(await this.main.platformUtilsService.getApplicationVersion(), "-v, --version");
+      .version(
+        await this.main.platformUtilsService.getInternalApplicationVersion(),
+        "-v, --version"
+      );
 
     program.on("option:pretty", () => {
       process.env.BW_PRETTY = "true";
@@ -84,19 +87,19 @@ export class Program extends BaseProgram {
       writeLn("    bw list items --search google");
       writeLn("    bw get item 99ee88d2-6046-4ea7-92c2-acac464b1412");
       writeLn("    bw get password google.com");
-      writeLn('    echo \'{"name":"My Folder"}\' | bw encode');
+      writeLn('    echo {"name":"My Folder"} | bw encode');
       writeLn("    bw create folder eyJuYW1lIjoiTXkgRm9sZGVyIn0K");
       writeLn(
         "    bw edit folder c7c7b60b-9c61-40f2-8ccd-36c49595ed72 eyJuYW1lIjoiTXkgRm9sZGVyMiJ9Cg=="
       );
       writeLn("    bw delete item 99ee88d2-6046-4ea7-92c2-acac464b1412");
       writeLn("    bw generate -lusn --length 18");
-      writeLn("    bw config server https://bitwarden.example.com");
+      writeLn("    bw config server https://hitachi-id.com");
       writeLn("    bw send -f ./file.ext");
-      writeLn('    bw send "text to send"');
-      writeLn('    echo "text to send" | bw send');
+      writeLn('    bw send "text to share"');
+      writeLn('    echo "text to share" | bw send');
       writeLn(
-        "    bw receive https://vault.bitwarden.com/#/send/rg3iuoS_Akm2gqy6ADRHmg/Ht7dYjsqjmgqUM3rjzZDSQ"
+        "    bw receive https://hitachi-id.com/#/send/rg3iuoS_Akm2gqy6ADRHmg/Ht7dYjsqjmgqUM3rjzZDSQ"
       );
       writeLn("", true);
     });
@@ -334,7 +337,7 @@ export class Program extends BaseProgram {
         writeLn("");
         writeLn("  Examples:");
         writeLn("");
-        writeLn('    echo \'{"name":"My Folder"}\' | bw encode');
+        writeLn('    echo {"name":"My Folder"} | bw encode');
         writeLn("", true);
       })
       .action(async () => {
@@ -370,8 +373,8 @@ export class Program extends BaseProgram {
         writeLn("  Examples:");
         writeLn("");
         writeLn("    bw config server");
-        writeLn("    bw config server https://bw.company.com");
-        writeLn("    bw config server bitwarden.com");
+        writeLn("    bw config server https://hitachi-id.com");
+        writeLn("    bw config server hitachi-id.com");
         writeLn(
           "    bw config server --api http://localhost:4000 --identity http://localhost:33656"
         );
@@ -383,7 +386,7 @@ export class Program extends BaseProgram {
         this.processResponse(response);
       });
 
-    program
+    /*    program
       .command("update")
       .description("Check for updates.")
       .on("--help", () => {
@@ -410,7 +413,7 @@ export class Program extends BaseProgram {
         const response = await command.run();
         this.processResponse(response);
       });
-
+*/
     program
       .command("completion")
       .description("Generate shell completions.")
@@ -440,9 +443,9 @@ export class Program extends BaseProgram {
         writeLn("  Example return value:");
         writeLn("");
         writeLn("    {");
-        writeLn('      "serverUrl": "https://bitwarden.example.com",');
+        writeLn('      "serverUrl": "https://hitachi-id.com",');
         writeLn('      "lastSync": "2020-06-16T06:33:51.419Z",');
-        writeLn('      "userEmail": "user@example.com,');
+        writeLn('      "userEmail": "user@example.com",');
         writeLn('      "userId": "00000000-0000-0000-0000-000000000000",');
         writeLn('      "status": "locked"');
         writeLn("    }");
