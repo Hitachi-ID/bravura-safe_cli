@@ -95,9 +95,9 @@ export class Program extends BaseProgram {
       writeLn("    bw delete item 99ee88d2-6046-4ea7-92c2-acac464b1412");
       writeLn("    bw generate -lusn --length 18");
       writeLn("    bw config server https://hitachi-id.com");
-      writeLn("    bw send -f ./file.ext");
-      writeLn('    bw send "text to share"');
-      writeLn('    echo "text to share" | bw send');
+      writeLn("    bw share -f ./file.ext");
+      writeLn('    bw share "text to share"');
+      writeLn('    echo "text to share" | bw share');
       writeLn(
         "    bw receive https://hitachi-id.com/#/send/rg3iuoS_Akm2gqy6ADRHmg/Ht7dYjsqjmgqUM3rjzZDSQ"
       );

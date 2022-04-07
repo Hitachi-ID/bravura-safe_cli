@@ -34,8 +34,7 @@ export class VaultProgram extends Program {
       .addCommand(this.shareCommand("move", false))
       .addCommand(this.confirmCommand())
       .addCommand(this.importCommand())
-      .addCommand(this.exportCommand())
-      .addCommand(this.shareCommand("share", true));
+      .addCommand(this.exportCommand());
   }
 
   private validateObject(requestedObject: string, validObjects: string[]): boolean {
