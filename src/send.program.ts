@@ -32,12 +32,12 @@ export class SendProgram extends Program {
 
   async register() {
     program.addCommand(this.sendCommand());
-    // receive is accessible both at `bw receive` and `bw send receive`
+    // receive is accessible both at `bw receive` and `bw share receive`
     program.addCommand(this.receiveCommand());
   }
 
   private sendCommand(): program.Command {
-    return new program.Command("send")
+    return new program.Command("share")
       .arguments("<data>")
       .description(
         "Work with Bravura Safe shares. A Share can be quickly created using this command or subcommands can be used to fine-tune the Share",
@@ -139,7 +139,7 @@ export class SendProgram extends Program {
     return new program.Command("template")
       .arguments("<object>")
       .description("Get json templates for share objects", {
-        object: "Valid objects are: send, send.text, send.file",
+        object: "Valid objects are: send.text, send.file",
       })
       .action(async (object) => {
         const cmd = new GetCommand(
@@ -176,12 +176,12 @@ export class SendProgram extends Program {
         writeLn("");
         writeLn("  Examples:");
         writeLn("");
-        writeLn("    bw get send searchText");
-        writeLn("    bw get send id");
-        writeLn("    bw get send searchText --text");
-        writeLn("    bw get send searchText --file");
-        writeLn("    bw get send searchText --file --output ../Photos/photo.jpg");
-        writeLn("    bw get send searchText --file --raw");
+        writeLn("    bw get share searchText");
+        writeLn("    bw get share id");
+        writeLn("    bw get share searchText --text");
+        writeLn("    bw get share searchText --file");
+        writeLn("    bw get share searchText --file --output ../Photos/photo.jpg");
+        writeLn("    bw get share searchText --file --raw");
         writeLn("", true);
       })
       .action(async (id: string, options: program.OptionValues) => {
@@ -222,7 +222,7 @@ export class SendProgram extends Program {
           options: program.OptionValues,
           args: { parent: program.Command }
         ) => {
-          // Work-around to support `--fullObject` option for `send create --fullObject`
+          // Work-around to support `--fullObject` option for `share create --fullObject`
           // Calling `option('--fullObject', ...)` above won't work due to Commander doesn't like same option
           // to be defind on both parent-command and sub-command
           const { fullObject = false } = args.parent.opts();
