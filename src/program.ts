@@ -80,26 +80,26 @@ export class Program extends BaseProgram {
     program.on("--help", () => {
       writeLn("\n  Examples:");
       writeLn("");
-      writeLn("    bw login");
-      writeLn("    bw lock");
-      writeLn("    bw unlock myPassword321");
-      writeLn("    bw list --help");
-      writeLn("    bw list items --search google");
-      writeLn("    bw get item 99ee88d2-6046-4ea7-92c2-acac464b1412");
-      writeLn("    bw get password google.com");
-      writeLn('    echo {"name":"My Folder"} | bw encode');
-      writeLn("    bw create folder eyJuYW1lIjoiTXkgRm9sZGVyIn0K");
+      writeLn("    bsafe login");
+      writeLn("    bsafe lock");
+      writeLn("    bsafe unlock myPassword321");
+      writeLn("    bsafe list --help");
+      writeLn("    bsafe list items --search google");
+      writeLn("    bsafe get item 99ee88d2-6046-4ea7-92c2-acac464b1412");
+      writeLn("    bsafe get password google.com");
+      writeLn('    echo {"name":"My Folder"} | bsafe encode');
+      writeLn("    bsafe create folder eyJuYW1lIjoiTXkgRm9sZGVyIn0K");
       writeLn(
-        "    bw edit folder c7c7b60b-9c61-40f2-8ccd-36c49595ed72 eyJuYW1lIjoiTXkgRm9sZGVyMiJ9Cg=="
+        "    bsafe edit folder c7c7b60b-9c61-40f2-8ccd-36c49595ed72 eyJuYW1lIjoiTXkgRm9sZGVyMiJ9Cg=="
       );
-      writeLn("    bw delete item 99ee88d2-6046-4ea7-92c2-acac464b1412");
-      writeLn("    bw generate -lusn --length 18");
-      writeLn("    bw config server https://hitachi-id.com");
-      writeLn("    bw share -f ./file.ext");
-      writeLn('    bw share "text to share"');
-      writeLn('    echo "text to share" | bw share');
+      writeLn("    bsafe delete item 99ee88d2-6046-4ea7-92c2-acac464b1412");
+      writeLn("    bsafe generate -lusn --length 18");
+      writeLn("    bsafe config server https://hitachi-id.com");
+      writeLn("    bsafe share -f ./file.ext");
+      writeLn('    bsafe share "text to share"');
+      writeLn('    echo "text to share" | bsafe share');
       writeLn(
-        "    bw receive https://hitachi-id.com/#/send/rg3iuoS_Akm2gqy6ADRHmg/Ht7dYjsqjmgqUM3rjzZDSQ"
+        "    bsafe receive https://hitachi-id.com/#/send/rg3iuoS_Akm2gqy6ADRHmg/Ht7dYjsqjmgqUM3rjzZDSQ"
       );
       writeLn("", true);
     });
@@ -133,10 +133,10 @@ export class Program extends BaseProgram {
         writeLn("");
         writeLn("  Examples:");
         writeLn("");
-        writeLn("    bw login");
-        writeLn("    bw login john@example.com myPassword321 --raw");
-        writeLn("    bw login john@example.com myPassword321 --method 1 --code 249213");
-        writeLn("    bw login --sso");
+        writeLn("    bsafe login");
+        writeLn("    bsafe login john@example.com myPassword321 --raw");
+        writeLn("    bsafe login john@example.com myPassword321 --method 1 --code 249213");
+        writeLn("    bsafe login --sso");
         writeLn("", true);
       })
       .action(async (email: string, password: string, options: program.OptionValues) => {
@@ -169,7 +169,7 @@ export class Program extends BaseProgram {
       .on("--help", () => {
         writeLn("\n  Examples:");
         writeLn("");
-        writeLn("    bw logout");
+        writeLn("    bsafe logout");
         writeLn("", true);
       })
       .action(async (cmd) => {
@@ -189,7 +189,7 @@ export class Program extends BaseProgram {
       .on("--help", () => {
         writeLn("\n  Examples:");
         writeLn("");
-        writeLn("    bw lock");
+        writeLn("    bsafe lock");
         writeLn("", true);
       })
       .action(async (cmd) => {
@@ -229,9 +229,9 @@ export class Program extends BaseProgram {
         writeLn("");
         writeLn("  Examples:");
         writeLn("");
-        writeLn("    bw unlock");
-        writeLn("    bw unlock myPassword321");
-        writeLn("    bw unlock myPassword321 --raw");
+        writeLn("    bsafe unlock");
+        writeLn("    bsafe unlock myPassword321");
+        writeLn("    bsafe unlock myPassword321 --raw");
         writeLn("", true);
       })
       .option("--check", "Check lock status.", async () => {
@@ -274,9 +274,9 @@ export class Program extends BaseProgram {
       .on("--help", () => {
         writeLn("\n  Examples:");
         writeLn("");
-        writeLn("    bw sync");
-        writeLn("    bw sync -f");
-        writeLn("    bw sync --last");
+        writeLn("    bsafe sync");
+        writeLn("    bsafe sync -f");
+        writeLn("    bsafe sync --last");
         writeLn("", true);
       })
       .action(async (cmd) => {
@@ -310,12 +310,12 @@ export class Program extends BaseProgram {
         writeLn("");
         writeLn("  Examples:");
         writeLn("");
-        writeLn("    bw generate");
-        writeLn("    bw generate -u -l --length 18");
-        writeLn("    bw generate -ulns --length 25");
-        writeLn("    bw generate -ul");
-        writeLn("    bw generate -p --separator _");
-        writeLn("    bw generate -p --words 5 --separator space");
+        writeLn("    bsafe generate");
+        writeLn("    bsafe generate -u -l --length 18");
+        writeLn("    bsafe generate -ulns --length 25");
+        writeLn("    bsafe generate -ul");
+        writeLn("    bsafe generate -p --separator _");
+        writeLn("    bsafe generate -p --words 5 --separator space");
         writeLn("", true);
       })
       .action(async (options) => {
@@ -337,7 +337,7 @@ export class Program extends BaseProgram {
         writeLn("");
         writeLn("  Examples:");
         writeLn("");
-        writeLn('    echo {"name":"My Folder"} | bw encode');
+        writeLn('    echo {"name":"My Folder"} | bsafe encode');
         writeLn("", true);
       })
       .action(async () => {
@@ -372,11 +372,11 @@ export class Program extends BaseProgram {
         writeLn("");
         writeLn("  Examples:");
         writeLn("");
-        writeLn("    bw config server");
-        writeLn("    bw config server https://hitachi-id.com");
-        writeLn("    bw config server hitachi-id.com");
+        writeLn("    bsafe config server");
+        writeLn("    bsafe config server https://hitachi-id.com");
+        writeLn("    bsafe config server hitachi-id.com");
         writeLn(
-          "    bw config server --api http://localhost:4000 --identity http://localhost:33656"
+          "    bsafe config server --api http://localhost:4000 --identity http://localhost:33656"
         );
         writeLn("", true);
       })
@@ -386,34 +386,6 @@ export class Program extends BaseProgram {
         this.processResponse(response);
       });
 
-    /*    program
-      .command("update")
-      .description("Check for updates.")
-      .on("--help", () => {
-        writeLn("\n  Notes:");
-        writeLn("");
-        writeLn("    Returns the URL to download the newest version of this CLI tool.");
-        writeLn("");
-        writeLn("    Use the `--raw` option to return only the download URL for the update.");
-        writeLn("");
-        writeLn("  Examples:");
-        writeLn("");
-        writeLn("    bw update");
-        writeLn("    bw update --raw");
-        writeLn("", true);
-      })
-      .action(async () => {
-        const command = new UpdateCommand(
-          this.main.platformUtilsService,
-          this.main.i18nService,
-          "cli",
-          "bw",
-          true
-        );
-        const response = await command.run();
-        this.processResponse(response);
-      });
-*/
     program
       .command("completion")
       .description("Generate shell completions.")
@@ -425,7 +397,7 @@ export class Program extends BaseProgram {
         writeLn("");
         writeLn("  Examples:");
         writeLn("");
-        writeLn("    bw completion --shell zsh");
+        writeLn("    bsafe completion --shell zsh");
         writeLn("", true);
       })
       .action(async (options: program.OptionValues, cmd: program.Command) => {
@@ -477,8 +449,8 @@ export class Program extends BaseProgram {
         .on("--help", () => {
           writeLn("\n  Examples:");
           writeLn("");
-          writeLn("    bw serve");
-          writeLn("    bw serve --port 8080");
+          writeLn("    bsafe serve");
+          writeLn("    bsafe serve --port 8080");
           writeLn("", true);
         })
         .action(async (cmd) => {
