@@ -32,7 +32,7 @@ export class SendProgram extends Program {
 
   async register() {
     program.addCommand(this.sendCommand());
-    // receive is accessible both at `bw receive` and `bw share receive`
+    // receive is accessible both at `bsafe receive` and `bsafe share receive`
     program.addCommand(this.receiveCommand());
   }
 
@@ -176,12 +176,12 @@ export class SendProgram extends Program {
         writeLn("");
         writeLn("  Examples:");
         writeLn("");
-        writeLn("    bw get share searchText");
-        writeLn("    bw get share id");
-        writeLn("    bw get share searchText --text");
-        writeLn("    bw get share searchText --file");
-        writeLn("    bw get share searchText --file --output ../Photos/photo.jpg");
-        writeLn("    bw get share searchText --file --raw");
+        writeLn("    bsafe get share searchText");
+        writeLn("    bsafe get share id");
+        writeLn("    bsafe get share searchText --text");
+        writeLn("    bsafe get share searchText --file");
+        writeLn("    bsafe get share searchText --file --output ../Photos/photo.jpg");
+        writeLn("    bsafe get share searchText --file --raw");
         writeLn("", true);
       })
       .action(async (id: string, options: program.OptionValues) => {

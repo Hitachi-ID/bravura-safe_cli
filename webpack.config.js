@@ -53,7 +53,7 @@ const webpackConfig = {
     __filename: false,
   },
   entry: {
-    bw: "./src/bw.ts",
+    bsafe: "./src/bw.ts",
   },
   optimization: {
     minimize: false,
