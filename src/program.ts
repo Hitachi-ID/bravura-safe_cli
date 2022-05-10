@@ -109,7 +109,6 @@ export class Program extends BaseProgram {
       .description("Log into a user account.")
       .option("--method <method>", "Two-step login method.")
       .option("--code <code>", "Two-step login code.")
-      .option("--sso", "Log in with Single-Sign On.")
       .option("--apikey", "Log in with an Api Key.")
       .option("--passwordenv <passwordenv>", "Environment variable storing your password")
       .option(
@@ -136,7 +135,6 @@ export class Program extends BaseProgram {
         writeLn("    bsafe login");
         writeLn("    bsafe login john@example.com myPassword321 --raw");
         writeLn("    bsafe login john@example.com myPassword321 --method 1 --code 249213");
-        writeLn("    bsafe login --sso");
         writeLn("", true);
       })
       .action(async (email: string, password: string, options: program.OptionValues) => {
@@ -364,7 +362,6 @@ export class Program extends BaseProgram {
         "Provides a custom notifications URL that differs from the base URL."
       )
       .option("--events <url>", "Provides a custom events URL that differs from the base URL.")
-      .option("--key-connector <url>", "Provides the URL for your Key Connector server.")
       .on("--help", () => {
         writeLn("\n  Settings:");
         writeLn("");
