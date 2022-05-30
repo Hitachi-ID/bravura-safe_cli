@@ -11,11 +11,7 @@ You can install the Bravura Safe CLI multiple different ways:
 
 **NPM**
 
-If you already have the Node.js runtime installed on your system, you can install the CLI using NPM. NPM makes it easy to keep your installation updated and should be the preferred installation method if you are already using Node.js.
-
-```bash
-npm install -g @bitwarden/cli
-```
+TBD
 
 **Native Executable**
 
@@ -27,7 +23,7 @@ We provide natively packaged versions of the CLI for each platform which have no
 The Bravura Safe CLI is self-documented with `--help` content and examples for every command. You should start exploring the CLI by using the global `--help` option:
 
 ```bash
-bw --help
+bsafe --help
 ```
 
 This option will list all available commands that you can use with the CLI.
@@ -35,8 +31,8 @@ This option will list all available commands that you can use with the CLI.
 Additionally, you can run the `--help` option on a specific command to learn more about it:
 
 ```bash
-bw list --help
-bw create --help
+bsafe list --help
+bsafe create --help
 ```
 
 **Detailed Documentation**
