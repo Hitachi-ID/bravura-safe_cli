@@ -1,12 +1,11 @@
 import { SendService } from "jslib-common/abstractions/send.service";
 import { StateService } from "jslib-common/abstractions/state.service";
-
 import { SendType } from "jslib-common/enums/sendType";
 import { Response } from "jslib-node/cli/models/response";
 
 import { SendResponse } from "../../models/response/sendResponse";
-
 import { CliUtils } from "../../utils";
+
 import { SendGetCommand } from "./get.command";
 
 export class SendEditCommand {
@@ -28,6 +27,8 @@ export class SendEditCommand {
     let req: SendResponse = null;
     if (typeof requestJson !== "string") {
       req = requestJson;
+      req.deletionDate = req.deletionDate == null ? null : new Date(req.deletionDate);
+      req.expirationDate = req.expirationDate == null ? null : new Date(req.expirationDate);
     } else {
       try {
         const reqJson = Buffer.from(requestJson, "base64").toString();
@@ -51,7 +52,7 @@ export class SendEditCommand {
     }
 
     if (send.type !== req.type) {
-      return Response.badRequest("Cannot change a Send's type");
+      return Response.badRequest("Cannot change a Share's type");
     }
 
     if (send.type === SendType.File && !(await this.stateService.getCanAccessPremium())) {

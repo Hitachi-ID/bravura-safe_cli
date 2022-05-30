@@ -1,9 +1,10 @@
 import * as program from "commander";
+import * as inquirer from "inquirer";
+
 import { ImportService } from "jslib-common/abstractions/import.service";
 import { OrganizationService } from "jslib-common/abstractions/organization.service";
-
-import { ImportType } from "jslib-common/services/import.service";
-
+import { ImportType } from "jslib-common/enums/importOptions";
+import { Importer } from "jslib-common/importers/importer";
 import { Response } from "jslib-node/cli/models/response";
 import { MessageResponse } from "jslib-node/cli/models/response/messageResponse";
 
@@ -26,14 +27,12 @@ export class ImportCommand {
 
       if (organization == null) {
         return Response.badRequest(
-          `You do not belong to an organization with the ID of ${organizationId}. Check the organization ID and sync your vault.`
+          `You do not belong to a team with the ID of ${organizationId}. Check the team ID and sync your vault.`
         );
       }
 
       if (!organization.canAccessImportExport) {
-        return Response.badRequest(
-          "You are not authorized to import into the provided organization."
-        );
+        return Response.badRequest("You are not authorized to import into the provided team.");
       }
     }
 
@@ -58,17 +57,22 @@ export class ImportCommand {
     }
 
     try {
-      const contents = await CliUtils.readFile(filepath);
+      let contents;
+      if (format === "1password1pux") {
+        contents = await CliUtils.extract1PuxContent(filepath);
+      } else {
+        contents = await CliUtils.readFile(filepath);
+      }
+
       if (contents === null || contents === "") {
         return Response.badRequest("Import file was empty.");
       }
 
-      const err = await this.importService.import(importer, contents, organizationId);
-      if (err != null) {
-        return Response.badRequest(err.message);
+      const response = await this.doImport(importer, contents, organizationId);
+      if (response.success) {
+        response.data = new MessageResponse("Imported " + filepath, null);
       }
-      const res = new MessageResponse("Imported " + filepath, null);
-      return Response.success(res);
+      return response;
     } catch (err) {
       return Response.badRequest(err);
     }
@@ -85,5 +89,37 @@ export class ImportCommand {
     const res = new MessageResponse("Supported input formats:", options);
     res.raw = options;
     return Response.success(res);
+  }
+
+  private async doImport(
+    importer: Importer,
+    contents: string,
+    organizationId?: string
+  ): Promise<Response> {
+    const err = await this.importService.import(importer, contents, organizationId);
+    if (err != null) {
+      if (err.passwordRequired) {
+        importer = this.importService.getImporter(
+          "bitwardenpasswordprotected",
+          organizationId,
+          await this.promptPassword()
+        );
+        return this.doImport(importer, contents, organizationId);
+      }
+      return Response.badRequest(err.message);
+    }
+
+    return Response.success();
+  }
+
+  private async promptPassword() {
+    const answer: inquirer.Answers = await inquirer.createPromptModule({
+      output: process.stderr,
+    })({
+      type: "password",
+      name: "password",
+      message: "Import file password:",
+    });
+    return answer.password;
   }
 }

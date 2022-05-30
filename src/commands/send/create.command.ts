@@ -4,16 +4,12 @@ import * as path from "path";
 import { EnvironmentService } from "jslib-common/abstractions/environment.service";
 import { SendService } from "jslib-common/abstractions/send.service";
 import { StateService } from "jslib-common/abstractions/state.service";
-
 import { SendType } from "jslib-common/enums/sendType";
-
 import { NodeUtils } from "jslib-common/misc/nodeUtils";
-
 import { Response } from "jslib-node/cli/models/response";
 
 import { SendResponse } from "../../models/response/sendResponse";
 import { SendTextResponse } from "../../models/response/sendTextResponse";
-
 import { CliUtils } from "../../utils";
 
 export class SendCreateCommand {
@@ -35,6 +31,8 @@ export class SendCreateCommand {
 
     if (typeof requestJson !== "string") {
       req = requestJson;
+      req.deletionDate = req.deletionDate == null ? null : new Date(req.deletionDate);
+      req.expirationDate = req.expirationDate == null ? null : new Date(req.expirationDate);
     } else {
       try {
         const reqJson = Buffer.from(requestJson, "base64").toString();
@@ -78,7 +76,7 @@ export class SendCreateCommand {
       case SendType.File:
         if (process.env.BW_SERVE === "true") {
           return Response.error(
-            "Creating a file-based Send is unsupported through the `serve` command at this time."
+            "Creating a file-based Share is unsupported through the `serve` command at this time."
           );
         }
 
@@ -88,7 +86,7 @@ export class SendCreateCommand {
 
         if (filePath == null) {
           return Response.badRequest(
-            "Must specify a file to Send either with the --file option or in the request JSON."
+            "Must specify a file to Share either with the --file option or in the request JSON."
           );
         }
 
@@ -97,7 +95,7 @@ export class SendCreateCommand {
       case SendType.Text:
         if (text == null) {
           return Response.badRequest(
-            "Must specify text content to Send either with the --text option or in the request JSON."
+            "Must specify text content to Shares either with the --text option or in the request JSON."
           );
         }
         req.text = new SendTextResponse();
@@ -106,7 +104,7 @@ export class SendCreateCommand {
         break;
       default:
         return Response.badRequest(
-          "Unknown Send type " + SendType[req.type] + ". Valid types are: file, text"
+          "Unknown Share type " + SendType[req.type] + ". Valid types are: file, text"
         );
     }
 

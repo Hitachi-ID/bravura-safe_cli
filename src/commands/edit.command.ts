@@ -1,28 +1,20 @@
-import * as program from "commander";
-
 import { ApiService } from "jslib-common/abstractions/api.service";
 import { CipherService } from "jslib-common/abstractions/cipher.service";
 import { CryptoService } from "jslib-common/abstractions/crypto.service";
 import { FolderService } from "jslib-common/abstractions/folder.service";
-
+import { Utils } from "jslib-common/misc/utils";
 import { Cipher } from "jslib-common/models/export/cipher";
 import { Collection } from "jslib-common/models/export/collection";
 import { Folder } from "jslib-common/models/export/folder";
-
 import { CollectionRequest } from "jslib-common/models/request/collectionRequest";
 import { SelectionReadOnlyRequest } from "jslib-common/models/request/selectionReadOnlyRequest";
-
 import { Response } from "jslib-node/cli/models/response";
 
+import { OrganizationCollectionRequest } from "../models/request/organizationCollectionRequest";
 import { CipherResponse } from "../models/response/cipherResponse";
 import { FolderResponse } from "../models/response/folderResponse";
 import { OrganizationCollectionResponse } from "../models/response/organizationCollectionResponse";
-
-import { OrganizationCollectionRequest } from "../models/request/organizationCollectionRequest";
-
 import { CliUtils } from "../utils";
-
-import { Utils } from "jslib-common/misc/utils";
 
 export class EditCommand {
   constructor(
@@ -106,9 +98,7 @@ export class EditCommand {
       return Response.notFound();
     }
     if (cipher.organizationId == null) {
-      return Response.badRequest(
-        "Item does not belong to an organization. Consider moving it first."
-      );
+      return Response.badRequest("Item does not belong to a team. Consider moving it first.");
     }
 
     cipher.collectionIds = req;
@@ -163,7 +153,7 @@ export class EditCommand {
     try {
       const orgKey = await this.cryptoService.getOrgKey(req.organizationId);
       if (orgKey == null) {
-        throw new Error("No encryption key for this organization.");
+        throw new Error("No encryption key for this team.");
       }
 
       const groups =

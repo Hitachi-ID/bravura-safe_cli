@@ -6,23 +6,17 @@ import { CryptoService } from "jslib-common/abstractions/crypto.service";
 import { CryptoFunctionService } from "jslib-common/abstractions/cryptoFunction.service";
 import { EnvironmentService } from "jslib-common/abstractions/environment.service";
 import { PlatformUtilsService } from "jslib-common/abstractions/platformUtils.service";
-
+import { SendType } from "jslib-common/enums/sendType";
+import { NodeUtils } from "jslib-common/misc/nodeUtils";
+import { Utils } from "jslib-common/misc/utils";
+import { SendAccess } from "jslib-common/models/domain/sendAccess";
+import { SymmetricCryptoKey } from "jslib-common/models/domain/symmetricCryptoKey";
 import { SendAccessRequest } from "jslib-common/models/request/sendAccessRequest";
 import { ErrorResponse } from "jslib-common/models/response/errorResponse";
 import { SendAccessView } from "jslib-common/models/view/sendAccessView";
-
 import { Response } from "jslib-node/cli/models/response";
 
-import { SendAccess } from "jslib-common/models/domain/sendAccess";
-import { SymmetricCryptoKey } from "jslib-common/models/domain/symmetricCryptoKey";
-
-import { SendType } from "jslib-common/enums/sendType";
-
-import { NodeUtils } from "jslib-common/misc/nodeUtils";
-import { Utils } from "jslib-common/misc/utils";
-
 import { SendAccessResponse } from "../../models/response/sendAccessResponse";
-
 import { DownloadCommand } from "../download.command";
 
 export class SendReceiveCommand extends DownloadCommand {
@@ -47,14 +41,14 @@ export class SendReceiveCommand extends DownloadCommand {
     try {
       urlObject = new URL(url);
     } catch (e) {
-      return Response.badRequest("Failed to parse the provided Send url");
+      return Response.badRequest("Failed to parse the provided Share url");
     }
 
     const apiUrl = this.getApiUrl(urlObject);
     const [id, key] = this.getIdAndKey(urlObject);
 
     if (Utils.isNullOrWhitespace(id) || Utils.isNullOrWhitespace(key)) {
-      return Response.badRequest("Failed to parse url, the url provided is not a valid Send url");
+      return Response.badRequest("Failed to parse url, the url provided is not a valid Share url");
     }
 
     const keyArray = Utils.fromUrlB64ToArray(key);
@@ -89,7 +83,7 @@ export class SendReceiveCommand extends DownloadCommand {
         // Write to stdout and response success so we get the text string only to stdout
         process.stdout.write(response?.text?.text);
         return Response.success();
-      case SendType.File:
+      case SendType.File: {
         const downloadData = await this.apiService.getSendFileDownloadData(
           response,
           this.sendAccessRequest,
@@ -101,6 +95,7 @@ export class SendReceiveCommand extends DownloadCommand {
           response?.file?.fileName,
           options.output
         );
+      }
       default:
         return Response.success(new SendAccessResponse(response));
     }
@@ -113,8 +108,8 @@ export class SendReceiveCommand extends DownloadCommand {
 
   private getApiUrl(url: URL) {
     const urls = this.environmentService.getUrls();
-    if (url.origin === "https://send.bitwarden.com") {
-      return "https://vault.bitwarden.com/api";
+    if (url.origin === "https://send.hitachi-id.com") {
+      return "https://vault.hitachi-id.com/api";
     } else if (url.origin === urls.api) {
       return url.origin;
     } else if (this.platformUtilsService.isDev() && url.origin === urls.webVault) {

@@ -1,18 +1,22 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import { Response } from "jslib-node/cli/models/response";
-import { MessageResponse } from "jslib-node/cli/models/response/messageResponse";
+import * as inquirer from "inquirer";
+import * as JSZip from "jszip";
 
+import { LogService } from "jslib-common/abstractions/log.service";
+import { NodeUtils } from "jslib-common/misc/nodeUtils";
+import { Utils } from "jslib-common/misc/utils";
 import { Organization } from "jslib-common/models/domain/organization";
 import { CollectionView } from "jslib-common/models/view/collectionView";
 import { FolderView } from "jslib-common/models/view/folderView";
+import { Response } from "jslib-node/cli/models/response";
+import { MessageResponse } from "jslib-node/cli/models/response/messageResponse";
 
-import { NodeUtils } from "jslib-common/misc/nodeUtils";
 import { FlagName, Flags } from "./flags";
 
 export class CliUtils {
-  static writeLn(s: string, finalLine: boolean = false, error: boolean = false) {
+  static writeLn(s: string, finalLine = false, error = false) {
     const stream = error ? process.stderr : process.stdout;
     if (finalLine && (process.platform === "win32" || !stream.isTTY)) {
       stream.write(s);
@@ -43,6 +47,34 @@ export class CliUtils {
     });
   }
 
+  static extract1PuxContent(input: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      let p: string = null;
+      if (input != null && input !== "") {
+        const osInput = path.join(input);
+        if (osInput.indexOf(path.sep) === -1) {
+          p = path.join(process.cwd(), osInput);
+        } else {
+          p = osInput;
+        }
+      } else {
+        reject("You must specify a file path.");
+      }
+      fs.readFile(p, function (err, data) {
+        if (err) {
+          reject(err);
+        }
+        JSZip.loadAsync(data).then(
+          (zip) => {
+            resolve(zip.file("export.data").async("string"));
+          },
+          (reason) => {
+            reject(reason);
+          }
+        );
+      });
+    });
+  }
   /**
    * Save the given data to a file and determine the target file if necessary.
    * If output is non-empty, it is used as target filename. Otherwise the target filename is
@@ -118,7 +150,7 @@ export class CliUtils {
 
   static readStdin(): Promise<string> {
     return new Promise((resolve, reject) => {
-      let input: string = "";
+      let input = "";
 
       if (process.stdin.isTTY) {
         resolve(input);
@@ -127,6 +159,7 @@ export class CliUtils {
 
       process.stdin.setEncoding("utf8");
       process.stdin.on("readable", () => {
+        // eslint-disable-next-line
         while (true) {
           const chunk = process.stdin.read();
           if (chunk == null) {
@@ -170,6 +203,51 @@ export class CliUtils {
       }
       return false;
     });
+  }
+
+  /**
+   * Gets a password from all available sources. In order of priority these are:
+   *   * passwordfile
+   *   * passwordenv
+   *   * user interaction
+   *
+   * Returns password string if successful, Response if not.
+   */
+  static async getPassword(
+    password: string,
+    options: { passwordFile?: string; passwordEnv?: string },
+    logService?: LogService
+  ): Promise<string | Response> {
+    if (Utils.isNullOrEmpty(password)) {
+      if (options?.passwordFile) {
+        password = await NodeUtils.readFirstLine(options.passwordFile);
+      } else if (options?.passwordEnv) {
+        if (process.env[options.passwordEnv]) {
+          password = process.env[options.passwordEnv];
+        } else if (logService) {
+          logService.warning(`Warning: Provided passwordenv ${options.passwordEnv} is not set`);
+        }
+      }
+    }
+
+    if (Utils.isNullOrEmpty(password)) {
+      if (process.env.BW_NOINTERACTION !== "true") {
+        const answer: inquirer.Answers = await inquirer.createPromptModule({
+          output: process.stderr,
+        })({
+          type: "password",
+          name: "password",
+          message: "Master password:",
+        });
+
+        password = answer.password;
+      } else {
+        return Response.badRequest(
+          "Master password is required. Try again in interactive mode or provide a password file or environment variable."
+        );
+      }
+    }
+    return password;
   }
 
   static convertBooleanOption(optionValue: any) {

@@ -1,9 +1,7 @@
 import { CipherService } from "jslib-common/abstractions/cipher.service";
-
 import { Response } from "jslib-node/cli/models/response";
 
 import { CipherResponse } from "../models/response/cipherResponse";
-
 import { CliUtils } from "../utils";
 
 export class ShareCommand {
@@ -45,7 +43,7 @@ export class ShareCommand {
       return Response.notFound();
     }
     if (cipher.organizationId != null) {
-      return Response.badRequest("This item already belongs to an organization.");
+      return Response.badRequest("This item already belongs to a team.");
     }
     const cipherView = await cipher.decrypt();
     try {

@@ -13,12 +13,9 @@ import { PolicyService } from "jslib-common/abstractions/policy.service";
 import { StateService } from "jslib-common/abstractions/state.service";
 import { SyncService } from "jslib-common/abstractions/sync.service";
 import { TwoFactorService } from "jslib-common/abstractions/twoFactor.service";
-
-import { MessageResponse } from "jslib-node/cli/models/response/messageResponse";
-
 import { Utils } from "jslib-common/misc/utils";
-
 import { LoginCommand as BaseLoginCommand } from "jslib-node/cli/commands/login.command";
+import { MessageResponse } from "jslib-node/cli/models/response/messageResponse";
 
 export class LoginCommand extends BaseLoginCommand {
   private options: program.OptionValues;
@@ -70,7 +67,7 @@ export class LoginCommand extends BaseLoginCommand {
       ) {
         const res = new MessageResponse(
           "You are logged in!",
-          "\n" + "To unlock your vault, use the `unlock` command. ex:\n" + "$ bw unlock"
+          "\n" + "To unlock your vault, use the `unlock` command. ex:\n" + "$ bsafe unlock"
         );
         return res;
       } else {
@@ -85,7 +82,7 @@ export class LoginCommand extends BaseLoginCommand {
             process.env.BW_SESSION +
             '"\n\n' +
             "You can also pass the session key to any command with the `--session` option. ex:\n" +
-            "$ bw list items --session " +
+            "$ bsafe list items --session " +
             process.env.BW_SESSION
         );
         res.raw = process.env.BW_SESSION;

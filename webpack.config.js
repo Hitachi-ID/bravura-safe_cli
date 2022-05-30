@@ -17,11 +17,6 @@ config.log(envConfig);
 const moduleRules = [
   {
     test: /\.ts$/,
-    enforce: "pre",
-    loader: "tslint-loader",
-  },
-  {
-    test: /\.ts$/,
     use: "ts-loader",
     exclude: path.resolve(__dirname, "node_modules"),
   },
@@ -58,7 +53,7 @@ const webpackConfig = {
     __filename: false,
   },
   entry: {
-    bw: "./src/bw.ts",
+    bsafe: "./src/bw.ts",
   },
   optimization: {
     minimize: false,
